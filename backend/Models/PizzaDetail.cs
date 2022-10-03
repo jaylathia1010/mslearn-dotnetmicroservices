@@ -2,7 +2,7 @@
 
 namespace backend.Models
 {
-    public class PizzaInfo
+    public class PizzaDetail
     {
         [Key]
         [Required]

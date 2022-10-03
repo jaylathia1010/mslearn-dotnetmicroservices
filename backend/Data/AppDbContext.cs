@@ -1,3 +1,4 @@
+using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
@@ -8,5 +9,7 @@ namespace backend.Data
         {
             
         }
+
+        public DbSet<PizzaDetail> PizzaDetails { get; set; }
     }
 }
