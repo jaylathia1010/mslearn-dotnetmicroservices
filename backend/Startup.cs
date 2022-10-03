@@ -28,6 +28,9 @@ namespace backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMem"));
+
+            services.AddScoped<IPizzaRepo, PizzaRepo>();
+
             services.AddControllers();
             services.AddSwaggerGen();
         }
