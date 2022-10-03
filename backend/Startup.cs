@@ -55,6 +55,8 @@ namespace backend
             {
                 endpoints.MapControllers();
             });
+
+            MockedData.PopulateData(app);
         }
     }
 }

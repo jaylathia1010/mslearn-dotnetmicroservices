@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using backend.Models;
 using backend.Data;
+using AutoMapper;
+using backend.Dtos;
+using System;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class PizzaInfoController : ControllerBase
+    [Route("api/[controller]")]
+    public class PizzaDetailController : ControllerBase
     {
         // private static readonly PizzaInfo[] TheMenu = new[]
         // {
@@ -19,20 +21,27 @@ namespace backend.Controllers
         //     new PizzaInfo { PizzaName = "Vanilla", Ingredients = "Sausage and pepperoni", Cost = 15, InStock = "no"},
         //     new PizzaInfo { PizzaName = "Spice Coming At Ya", Ingredients = "Peppers, chili sauce, spicy andouille", Cost = 50, InStock = "yes"}
         // };
-        private readonly ILogger<PizzaInfoController> _logger;
-        private IPizzaRepo _pizzaRepo;
+        private readonly ILogger<PizzaDetailController> _logger;
+        private readonly IPizzaRepo _pizzaRepo;
+        private readonly IMapper _mapper;
 
-        public PizzaInfoController(ILogger<PizzaInfoController> logger,
-            IPizzaRepo pizzaRepo)
+        public PizzaDetailController(ILogger<PizzaDetailController> logger,
+            IPizzaRepo pizzaRepo,
+            IMapper mapper)
         {
             _logger = logger;
             _pizzaRepo = pizzaRepo;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public IEnumerable<PizzaDetail> Get()
+        public ActionResult<IEnumerable<PizzaReadDto>> GetAllPizzas()
         {
-            return _pizzaRepo.GetAllPizzas();
+            Console.WriteLine("---> Getting Pizzas --->");
+
+            var pizzas = _pizzaRepo.GetAllPizzas();
+
+            return Ok(_mapper.Map<IEnumerable<PizzaReadDto>>(pizzas));
         }
     }
 }
