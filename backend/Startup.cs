@@ -32,6 +32,7 @@ namespace backend
             services.AddScoped<IPizzaRepo, PizzaRepo>();
 
             services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
         }
 
