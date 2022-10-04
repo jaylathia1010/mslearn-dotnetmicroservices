@@ -6,6 +6,8 @@ using AutoMapper;
 using backend.Dtos;
 using System;
 using backend.Models;
+using backend.SyncDataServices.Http;
+using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
@@ -16,14 +18,17 @@ namespace backend.Controllers
         private readonly ILogger<PizzaDetailController> _logger;
         private readonly IPizzaRepo _pizzaRepo;
         private readonly IMapper _mapper;
+        private IReportDataClient _reportDataClient;
 
         public PizzaDetailController(ILogger<PizzaDetailController> logger,
             IPizzaRepo pizzaRepo,
-            IMapper mapper)
+            IMapper mapper,
+            IReportDataClient reportDataClient)
         {
             _logger = logger;
             _pizzaRepo = pizzaRepo;
             _mapper = mapper;
+            _reportDataClient = reportDataClient;
         }
 
         [HttpGet]
@@ -50,13 +55,22 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PizzaReadDto> CreatePizza(PizzaCreateDto pizzaCreate)
+        public async Task<ActionResult<PizzaReadDto>> CreatePizza(PizzaCreateDto pizzaCreate)
         {
             var pizzaModel = _mapper.Map<PizzaDetail>(pizzaCreate);
             _pizzaRepo.CreatePizza(pizzaModel);
             _pizzaRepo.SaveChanges();
 
             var pizzaReadDto = _mapper.Map<PizzaReadDto>(pizzaModel);
+
+            try
+            {
+                await _reportDataClient.SendPizzaToReport(pizzaReadDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Communication between Pizza and Report Service FAILED due to: {ex.Message}");
+            }
 
             return CreatedAtRoute(nameof(GetPizzaById), new { Id = pizzaReadDto.Id }, pizzaReadDto);
         }

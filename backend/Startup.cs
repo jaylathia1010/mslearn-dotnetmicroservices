@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Data;
+using backend.SyncDataServices.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,8 @@ namespace backend
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("InMem"));
 
             services.AddScoped<IPizzaRepo, PizzaRepo>();
+
+            services.AddHttpClient<IReportDataClient, HttpReportDataClient>();
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
