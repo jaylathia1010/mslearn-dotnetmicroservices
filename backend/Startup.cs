@@ -37,6 +37,8 @@ namespace backend
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
+
+            Console.WriteLine($">>> Report Service Endpoint: {Configuration["ReportsService"]}");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
