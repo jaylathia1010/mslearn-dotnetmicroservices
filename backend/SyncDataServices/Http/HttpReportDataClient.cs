@@ -4,16 +4,19 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using backend.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace backend.SyncDataServices.Http
 {
     public class HttpReportDataClient : IReportDataClient
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public HttpReportDataClient(HttpClient httpClient)
+        public HttpReportDataClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         public async Task SendPizzaToReport(PizzaReadDto pizza)
@@ -24,7 +27,7 @@ namespace backend.SyncDataServices.Http
                 "application/json"
             );
 
-            var response = await _httpClient.PostAsync("http://localhost:5195/api/Reports/PizzaDetail", httpContent);
+            var response = await _httpClient.PostAsync($"{_configuration["ReportsService"]}/Reports/PizzaDetail", httpContent);
 
             if (response.IsSuccessStatusCode)
             {
